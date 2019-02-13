@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>form</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  </head>
+  <body>
+  <div class="main">
+    <div class="s1" >
+      <h1>Career Objective</h1>
+      <select id="career" name="career" placeholder="Career Objective">
+        <option>To obtain a position with a progressive organization who provides opportunities to utilize acquired skills and knowledge in the industrial maintenance field.</option>
+        <option>To apply my knowledge and ability in a position as a Technician.To obtain a challenging, career oriented position with a progressive company.</option>
+
+</select>
+    </div>
+    <div class="s2">
+      <h1>Personal Details</h1>
+      <input type="text" name="name" id="name" placeholder="enter full name">
+      <input type="number" name="mobile" id="mobile" placeholder="enter mobile number">
+      <input type="text" name="email" id="email" placeholder="enter email">
+    </div>
+    <div class="s2">
+      <h1>Graduation Details</h1>
+      <label for="ginst">
+      <input type ="text" name="ginst" id="ginst" placeholder="Institute name">
+    </label><br>
+      <label for="gcourse">
+        <select id="gcourse" name="gcourse">
+          <option>select deg</option>
+          <option>B.Tech</option>
+          <option>Bsc</option>
+          <option>B.Arch</option>
+        </select>
+      </label><br>
+      <label for="gyear">
+        <input type ="number" id="gyear" name="gyear" placeholder="year of passing">
+      </label><br>
+      <label for="gpercentage">
+        <input type ="number" id="gpercentage" name="gpercentage" placeholder="percentage">
+      </label>
+
+    </div>
+    <div class="s2">
+      <h1>Intermediate Details</h1>
+      <label for="iinst">
+      <input type ="text" name="iinst" id="iinst" placeholder="Institute name">
+    </label><br>
+      <label for="icourse">
+        <select id="icourse" name="icourse">
+          <option>select grp</option>
+          <option>MPC</option>
+          <option>MEC</option>
+          <option>HEC</option>
+        </select>
+      </label><br>
+      <label for="iyear">
+        <input type ="number" id="iyear" name="iyear" placeholder="year of passing">
+      </label><br>
+      <label for="ipercentage">
+        <input type ="number" id="ipercentage" name="ipercentage" placeholder="percentage">
+      </label>
+    </div>
+    <div class="s2">
+      <h1>SSC Details</h1>
+      <label for="sinst">
+      <input type ="text" name="school" id="sinst" placeholder="School name">
+    </label><br>
+      <label for="scourse">
+        <select id="scourse" name="scourse">
+          <option>select grp</option>
+          <option>CBSC</option>
+          <option>STATE</option>
+          <option>ICSE</option>
+        </select>
+      </label><br>
+      <label for="syear">
+        <input type ="number" id="syear" name="syear" placeholder="year of passing">
+      </label><br>
+      <label for="spercentage">
+        <input type ="number" id="spercentage" name="spercentage" placeholder="percentage">
+      </label>
+    </div>
+  <button type="button" name="button" onclick="submitdata()">SUBMIT</button>
+  </div>
+
+  </body>
+
+</html>
+
+
+<!--JAVASCRIPT-->
+<script type="text/javascript">
+  function submitdata(){
+    var career=document.getElementById("career").value;
+    var name;
+    var mobile;
+    var email;
+    name=document.getElementById("name").value;
+    mobile=document.getElementById("mobile").value;
+    email=document.getElementById("email").value;
+
+    var Ginst=document.getElementById("ginst").value;
+    var Gcourse=document.getElementById("gcourse").value;
+    var Gyear=document.getElementById("gyear").value;
+    var Gpercentage=document.getElementById("gpercentage").value;
+
+    var Iinst=document.getElementById("iinst").value;
+    var Icourse=document.getElementById("icourse").value;
+    var Iyear=document.getElementById("iyear").value;
+    var Ipercentage=document.getElementById("ipercentage").value;
+
+
+    var Sinst=document.getElementById("sinst").value;
+    var Scourse=document.getElementById("scourse").value;
+    var Syear=document.getElementById("syear").value;
+    var Spercentage=document.getElementById("spercentage").value;
+
+
+//IndexedDB
+    var request;
+    var open;
+    var result;
+    var tx;
+    var store;
+    var indexedDB= window.indexedDB || window.webkitindexedDB || window.msindexedDB ||window.mozindexedDB;
+    request=indexedDB.open("mydatabase",1);
+
+
+    request.onerror=function(e){
+      console.log("error"+e);
+    }
+    //onupgradeneeded
+    request.onupgradeneeded=function(e){
+      result=e.target.result;
+      store=result.createObjectStore("resume",{keyPath:"name"});
+    }
+    //onsuccess
+    request.onsuccess=function(e){
+      result=e.target.result;
+      tx=result.transaction("resume",'readwrite');
+      store=tx.objectStore("resume");
+      store.put({
+        career:career,
+        name:name,
+        mobile:mobile,
+        email:email,
+        education:[
+        {
+          Institute:Ginst,
+          course:Gcourse,
+          year:Gyear,
+          percentage:Gpercentage
+        },
+        {
+          Institute:Iinst,
+          course:Icourse,
+          year:Iyear,
+          percentage:Ipercentage
+        },
+        {
+          Institute:Sinst,
+          course:Scourse,
+          year:Syear,
+          percentage:Spercentage
+        }
+        ]
+      });
+      window.open("index.html");
+    }
+  }
+
+</script>

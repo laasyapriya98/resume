@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Resume</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div class="main1">
+      <div class="left">
+        <img src="cv.jpg" alt="profile" width=200px height=200px>
+      </div>
+        <div class="right">
+        </div>
+
+    </div>
+  </body>
+</html>
+<script type="text/javascript">
+   var userdata=window.location.search.substring(1).split("&");
+   for(var i=0;i<userdata.length;i++){
+     var dt=userdata[i].split("=");
+     console.log(dt);
+   }
+   console.log(dt[1]);
+   //IndexedDB
+   var request;
+   var open;
+   var result;
+   var tx;
+   var store;
+   var indexedDB= window.indexedDB || window.webkitindexedDB || window.msindexedDB ||window.mozindexedDB;
+   request=indexedDB.open("mydatabase",1);
+
+
+   request.onerror=function(e){
+     console.log("error"+e);
+   }
+   //onupgradeneeded
+   request.onupgradeneeded=function(e){
+     result=e.target.result;
+     store=result.createObjectStore("resume",{keyPath:"name"});
+   }
+   //onsuccess
+   request.onsuccess=function(e){
+     result=e.target.result;
+     tx=result.transaction("resume",'readwrite');
+     store=tx.objectStore("resume");
+  var info=store.get(dt[1]);
+  //onsuccess
+  info.onsuccess=function(e){
+    var finalresult=e.target.result;
+    console.log(finalresult);
+    PersonalInfo(finalresult);
+    career(finalresult);
+    education(finalresult.education);
+  }
+}
+  var left=document.querySelector(".left");
+  var right=document.querySelector(".right");
+  function PersonalInfo(pi){
+    /*var img=document.createElement("img");
+    img.src="cv.jpg";
+    img.alt=pi.name;
+    left.appendChild(img);*/
+
+    var name=document.createElement("h1");
+    name.textContent=pi.name;
+    left.appendChild(name);
+
+    var email=document.createElement("p");
+    email.textContent=pi.email;
+    left.appendChild(email);
+
+    var mobile=document.createElement("p");
+    mobile.textContent=pi.mobile;
+    left.appendChild(mobile);
+  }
+  function career(ca){
+    var heading=document.createElement("h1");
+    heading.textContent="Career Objective";
+    right.appendChild(heading);
+
+     var hr=document.createElement("hr");
+     right.appendChild(hr);
+
+    var careerob=document.createElement("p");
+    careerob.textContent=ca.career;
+    right.appendChild(careerob);
+  }
+  //Educational Details
+  function education(ed){
+    var heading=document.createElement("h1");
+    heading.textContent="Education Qualifications";
+    right.appendChild(heading);
+
+    var hr=document.createElement("hr");
+    right.appendChild(hr);
+
+    var ul=document.createElement("ul");
+    right.appendChild(ul);
+   for(var i in ed){
+     var Institute=document.createElement("p");
+     Institute.textContent=ed[i].Institute;
+     ul.appendChild(Institute);
+
+     var li=document.createElement("li");
+     li.textContent=ed[i].course;
+     ul.appendChild(li);
+
+     var year=document.createElement("p");
+     year.textContent=ed[i].year;
+     ul.appendChild(year);
+
+     var percentage=document.createElement("p");
+     percentage.textContent=ed[i].percentage;
+     ul.appendChild(percentage);
+   }
+ }
+</script>
